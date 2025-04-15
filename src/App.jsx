@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 
 const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -9,53 +9,46 @@ const numbers = "0123456789";
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~";
 
 function App() {
-  const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [msgUsername, setMsgUsername] = useState("");
   const [password, setPassword] = useState("");
   const [msgPassword, setMsgPassword] = useState("");
-  const [specializzazione, setSpecializzazione] = useState("default");
-  const [anni, setAnni] = useState("");
   const [descrizione, setDescrizione] = useState("");
   const [msgDescrizione, setMsgDescrizione] = useState("");
+  const nomeRef = useRef();
+  const specializzazioneRef = useRef();
+  const anniRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
-      !name ||
+      !nomeRef.current.value ||
       !username ||
       !password ||
-      specializzazione === "default" ||
-      !anni ||
-      anni <= 0 ||
+      specializzazioneRef.current.value === "default" ||
+      !anniRef.current.value ||
+      anniRef.current.value <= 0 ||
       !descrizione
     ) {
       console.log("compila i campi obbligatori");
       return;
     } else {
       console.log(
-        "name: " + name,
+        "name: " + nomeRef.current.value,
         "; username: " + username,
         "; password: " + password,
-        "; specializzazione: " + specializzazione,
-        "; anni di esperienza: " + anni,
+        "; specializzazione: " + specializzazioneRef.current.value,
+        "; anni di esperienza: " + anniRef.current.value,
         "; descrizione: " + descrizione
       );
     }
   };
 
-  console.log(name);
-
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formBasicName">
         <Form.Label>Nome completo</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Nome e cognome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <Form.Control type="text" placeholder="Nome e cognome" ref={nomeRef} />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formBasicUsername">
@@ -129,8 +122,7 @@ function App() {
         <Form.Label>Seleziona specializzazione</Form.Label>
         <Form.Select
           aria-label="Default select example"
-          value={specializzazione}
-          onChange={(e) => setSpecializzazione(e.target.value)}
+          ref={specializzazioneRef}
         >
           <option value="default">Scegli una specializzazione</option>
           <option value="Full Stack">Full Stack</option>
@@ -144,8 +136,7 @@ function App() {
         <Form.Control
           type="number"
           placeholder="Anni di esperienza"
-          value={anni}
-          onChange={(e) => setAnni(e.target.value)}
+          ref={anniRef}
         />
       </Form.Group>
 
